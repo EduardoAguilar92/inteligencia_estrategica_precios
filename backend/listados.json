@@ -1,0 +1,23 @@
+[
+    {
+        "competencia": "Liverpool",
+        "departamento": "Línea Blanca",
+        "clase": "Equipos de cocina",
+        "categoria": "Refrigeradores",
+        "url": "https://www.liverpool.com.mx/tienda/refrigeradores/catst53841452"
+    },
+    {
+        "competencia": "Coppel",
+        "departamento": "Línea Blanca",
+        "clase": "Equipos de cocina",
+        "categoria": "Refrigeradores",
+        "url": "https://www.coppel.com/ct/linea-blanca/refrigeradores/cat000453"
+    },
+    {
+        "competencia": "Sears",
+        "departamento": "Línea Blanca",
+        "clase": "Equipos de cocina",
+        "categoria": "Refrigeradores",
+        "url": "https://www.sears.com.mx/cat/l%C3%ADnea%20blanca%20y%20electrodom%C3%A9sticos/refrigeraci%C3%B3n%20y%20congelaci%C3%B3n/refrigeradores%20y%20frigobares?id=4843"
+    }
+]

@@ -1,0 +1,16 @@
+# Node modules
+node_modules/
+
+# Vite cache
+node_modules/.vite/
+# Log files
+npm-debug.log*
+# Local env files
+.env
+
+# package-lock.json is generated automatically and should not be committed
+package-lock.json
+
+# Environment
+.venv
+.vscode

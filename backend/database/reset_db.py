@@ -14,7 +14,7 @@ def resetear_base_de_datos():
             cursor.execute("DROP TABLE IF EXISTS cat_listados CASCADE;")
             cursor.execute("DROP TABLE IF EXISTS contenidos CASCADE;")
             cursor.execute("DROP TABLE IF EXISTS cat_modelos CASCADE;")
-            cursor.execute("DROP TABLE IF EXISTS productos CASCADE;")
+            cursor.execute("DROP TABLE IF EXISTS historico_precios CASCADE;")
             # Agrega aquí cualquier otra tabla que necesites eliminar
         conn.commit()
         print("✅ Base de datos reseteada correctamente")

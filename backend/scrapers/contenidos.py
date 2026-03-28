@@ -57,7 +57,6 @@ class ListadosScraper:
                     WebDriverWait(self.driver, 15).until(
                         EC.presence_of_element_located((By.CLASS_NAME, "o-listing__products"))
                     )
-                    time.sleep(5)  # Espera adicional para asegurar que los productos estén completamente cargados
                 except:
                     print("❌ No cargaron los productos")
                     break
@@ -67,7 +66,12 @@ class ListadosScraper:
                     print(f"✅ Última página alcanzada: página {pagina_actual-1}")
                     break
                 url_anterior = url_actual
-                contenedor = self.driver.find_element(By.XPATH, "//ul[@class='m-product__listingPlp']")
+                time.sleep(5)  # Espera adicional para asegurar que los productos estén completamente cargados
+                contenedor = WebDriverWait(self.driver, 15).until(
+                                EC.presence_of_element_located(
+                                    (By.XPATH, "//ul[@class='m-product__listingPlp']")
+                                )
+                            )
                 html = contenedor.get_attribute("outerHTML")
                 insertar_productos(self.listado_id, html, pagina_actual)
                 # print(html[:500])  # Imprime los primeros 500 caracteres del HTML del contenedor para verificación
@@ -110,9 +114,8 @@ class ListadosScraper:
                 # ── ESPERA A QUE CARGUEN LOS PRODUCTOS ────────────────────────────────────
                 try:
                     WebDriverWait(self.driver, 15).until(
-                        EC.presence_of_element_located((By.CLASS_NAME, "css-uf40v6"))
+                        EC.presence_of_element_located((By.ID, "productContainer"))
                     )
-                    time.sleep(5)  # Espera adicional para asegurar que los productos estén completamente cargados
                 except:
                     print("❌ No cargaron los productos")
                     break
@@ -122,7 +125,12 @@ class ListadosScraper:
                     print(f"✅ Última página alcanzada: página {pagina_actual-1}")
                     break
                 url_anterior = url_actual
-                contenedor = self.driver.find_element(By.CLASS_NAME, "css-uf40v6")
+                time.sleep(5)  # Espera adicional para asegurar que los productos estén completamente cargados
+                contenedor = WebDriverWait(self.driver, 15).until(
+                                EC.presence_of_element_located(
+                                    (By.ID, "productContainer")
+                                )
+                            )
                 html = contenedor.get_attribute("outerHTML")
                 insertar_productos(self.listado_id, html, pagina_actual)
                 # print(html[:500])  # Imprime los primeros 500 caracteres del HTML del contenedor para verificación
@@ -169,7 +177,6 @@ class ListadosScraper:
                     WebDriverWait(self.driver, 15).until(
                         EC.presence_of_element_located((By.CLASS_NAME, "boxGeneralProductosResultados"))
                     )
-                    time.sleep(5)  # Espera adicional para asegurar que los productos estén completamente cargados
                 except:
                     print("❌ No cargaron los productos")
                     break
@@ -179,7 +186,12 @@ class ListadosScraper:
                     print(f"✅ Última página alcanzada: página {pagina_actual-1}")
                     break
                 url_anterior = url_actual
-                contenedor = self.driver.find_element(By.XPATH, "//article[contains(@class,'CardProduct_cardProduct')]")
+                time.sleep(5)  # Espera adicional para asegurar que los productos estén completamente cargados
+                contenedor = WebDriverWait(self.driver, 15).until(
+                                EC.presence_of_element_located(
+                                    (By.CSS_SELECTOR, "div.boxProductosCategory.cardGrid")
+                                )
+                            )
                 html = contenedor.get_attribute("outerHTML")
                 insertar_productos(self.listado_id, html, pagina_actual)
                 # print(html[:500])  # Imprime los primeros 500 caracteres del HTML del contenedor para verificación

@@ -6,6 +6,7 @@ def crear_tabla_contenidos(cursor):
             listado_id      INTEGER NOT NULL,
             contenido       TEXT NOT NULL,
             pagina          INTEGER NOT NULL,
+            procesado       BOOLEAN NOT NULL DEFAULT FALSE,
             fecha           DATE NOT NULL DEFAULT CURRENT_DATE,  
             created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             modified_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

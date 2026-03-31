@@ -1,5 +1,6 @@
 import sys
 import psycopg2
+import argparse
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -10,10 +11,10 @@ from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 
 from database.connection import get_connection
-from database.queries import obtener_contenidos, insertar_producto_catalogo, actualizar_flag_contenido_procesado
+from database.queries import obtener_contenidos, insertar_producto_catalogo
 
 
-class ContenidoProcessor:
+class ContentProcessor:
     def __init__(self, contenido_id: int, contenido: str, pagina: int):
         self.contenido_id = contenido_id
         self.contenido = contenido
@@ -73,8 +74,6 @@ class ContenidoProcessor:
                                                     producto_propio,
                                                     activo
                                                     )
-                        
-
 
                     except Exception as e:
                         print(f"⚠️ Error procesando tarjeta Liverpool: {e}")
@@ -95,17 +94,17 @@ class ContenidoProcessor:
                         imagen = tarjeta.select_one("img")
                         url_imagen = imagen.get("src") or imagen.get("data-src") if imagen else None
 
-                        precio_regular_elemento = tarjeta.select_one("span.chakra-text.css-uwrhh6")
-                        try:
-                            precio_regular_float = float(precio_regular_elemento.get_text(strip=True).replace("$", "").replace(",", "")) if precio_regular_elemento else None
-                        except (ValueError, AttributeError):
-                            precio_regular_float = None
+                        # precio_regular_elemento = tarjeta.select_one("span.chakra-text.css-uwrhh6")
+                        # try:
+                        #     precio_regular_float = float(precio_regular_elemento.get_text(strip=True).replace("$", "").replace(",", "")) if precio_regular_elemento else None
+                        # except (ValueError, AttributeError):
+                        #     precio_regular_float = None
 
-                        precio_descuento_elemento = tarjeta.select_one("span.chakra-text.css-44wgta")
-                        try:
-                            precio_descuento_float = float(precio_descuento_elemento.get_text(strip=True).replace("$", "").replace(",", "")) if precio_descuento_elemento else None
-                        except (ValueError, AttributeError):
-                            precio_descuento_float = None
+                        # precio_descuento_elemento = tarjeta.select_one("span.chakra-text.css-44wgta")
+                        # try:
+                        #     precio_descuento_float = float(precio_descuento_elemento.get_text(strip=True).replace("$", "").replace(",", "")) if precio_descuento_elemento else None
+                        # except (ValueError, AttributeError):
+                        #     precio_descuento_float = None
 
                         marca = ''
                         modelo = ''
@@ -142,19 +141,19 @@ class ContenidoProcessor:
                         titulo = tarjeta.select_one("h3[class*='CardProduct_h4']")
                         descripcion = titulo.get_text(" ", strip=True).replace("\n", " ").strip() if titulo else ""
 
-                        precio_regular_elemento = tarjeta.select_one("span[class*='textUnderline']")
-                        try:
-                            precio_texto = precio_regular_elemento.get_text(strip=True).replace("$", "").replace(",", "").replace("MXN", "").strip() if precio_regular_elemento else ""
-                            precio_regular_float = float(precio_texto) if precio_texto else None
-                        except (ValueError, AttributeError):
-                            precio_regular_float = None
+                        # precio_regular_elemento = tarjeta.select_one("span[class*='textUnderline']")
+                        # try:
+                        #     precio_texto = precio_regular_elemento.get_text(strip=True).replace("$", "").replace(",", "").replace("MXN", "").strip() if precio_regular_elemento else ""
+                        #     precio_regular_float = float(precio_texto) if precio_texto else None
+                        # except (ValueError, AttributeError):
+                        #     precio_regular_float = None
 
-                        precio_descuento_elemento = tarjeta.select_one("p[class*='precio1']")
-                        try:
-                            precio_texto = precio_descuento_elemento.get_text(strip=True).replace("$", "").replace(",", "").replace("MXN", "").strip() if precio_descuento_elemento else ""
-                            precio_descuento_float = float(precio_texto) if precio_texto else None
-                        except (ValueError, AttributeError):
-                            precio_descuento_float = None
+                        # precio_descuento_elemento = tarjeta.select_one("p[class*='precio1']")
+                        # try:
+                        #     precio_texto = precio_descuento_elemento.get_text(strip=True).replace("$", "").replace(",", "").replace("MXN", "").strip() if precio_descuento_elemento else ""
+                        #     precio_descuento_float = float(precio_texto) if precio_texto else None
+                        # except (ValueError, AttributeError):
+                        #     precio_descuento_float = None
 
                         imagen = tarjeta.select_one("picture img")
                         url_imagen = (imagen.get("src") if imagen else None) or (imagen.get("data-src") if imagen else None)
@@ -182,29 +181,35 @@ class ContenidoProcessor:
         finally:
             if self.conn:
                 self.conn.close()
-    
 
-class ProductoProcessor:
-    def __init__(self, contenido_id: int, descripcion_id: int, precio_actual: float, precio_anterior: float):
-        self.producto_id = descripcion_id
-        self.contenido_id = contenido_id
-        self.precio_actual = precio_actual
-        self.precio_anterior = precio_anterior
+def parsear_argumentos() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Procesar contenidos HTML de listados de productos")
+    parser.add_argument(
+        "-d",
+        "--date",
+        required=False,
+        help="Fecha de los contenidos a procesar (formato: YYYY-MM-DD). Si no se especifica, se procesan los contenidos del día actual.",
+    )
 
-    def procesar(self) -> Any:
-        # Aquí puedes agregar la lógica para procesar el producto individualmente
-        print(f"Procesando producto {self.producto_id} del contenido {self.contenido_id} con URL: {self.url_producto}")
-        # Ejemplo: podrías hacer un scraping adicional para obtener más detalles del producto
+    args = parser.parse_args()
 
-def procesar_contenidos():
-    contenidos = obtener_contenidos()
-    resultados = []
+    return args
+
+def procesar_catalogo(fecha: str = None):
+    contenidos = obtener_contenidos(fecha)
     for i, contenido in enumerate(contenidos):
-        processor = ContenidoProcessor(contenido[0], contenido[2], contenido[3])  # Asumiendo que el contenido HTML está en la tercera columna
-        resultado = processor.procesar()
-        resultados.append(resultado)
-    return resultados
+        print(f"Procesando contenido {i+1}/{len(contenidos)} (ID: {contenido[0]})")
+        ContentProcessor(contenido[0], contenido[2], contenido[3]).procesar()  # Asumiendo que el contenido HTML está en la tercera columna
+        
+    return None
 
 
 if __name__ == "__main__":
-    resultados = procesar_contenidos()
+    print("Iniciando procesamiento de contenidos...")
+    args = parsear_argumentos()
+    print("Ejecutando el script principal")
+    if args.date:
+        print(f"Procesando contenidos para la fecha: {args.date}")
+        procesar_catalogo(args.date)
+    else:
+        procesar_catalogo()

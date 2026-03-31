@@ -8,7 +8,7 @@ except ModuleNotFoundError:
 
 def carga_inicial(cursor):
     # 1. Leer Excel
-    df = pd.read_excel('backend/raw_data/listados.xlsx', sheet_name='test')
+    df = pd.read_excel('backend/raw_data/listados.xlsx', sheet_name='Hoja1')
     print("📊 Excel cargado correctamente:")
     print(df.head())
 

@@ -1,10 +1,15 @@
 import argparse
+from datetime import datetime
+import time
+
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from database.reset_db import resetear_base_de_datos
 from database.init_db import inicializar_base_de_datos
 from scrapers.listados import obtener_listados
 from scrapers.contenidos import ListadosScraper
+from processing.procesar_contenido import procesar_catalogo
+from processing.procesar_productos import procesar_productos
 
 
 def parsear_argumentos() -> argparse.Namespace:
@@ -73,3 +78,15 @@ if __name__ == "__main__":
                 print(future.result())
             except Exception as e:
                 print(f"❌ Error en tarea de scraping: {e}")
+
+    print("Procesamiento de listados completado")
+    procesar_catalogo()
+    print(f"El scraping ha finalizado {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}.")
+
+    print("Procesamiento de contenidos completado")
+    print(f"El procesamiento de contenido ha finalizado {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}.")
+
+    procesar_productos()
+    print("Procesamiento de productos completado")
+    print(f"El procesamiento de productos ha finalizado {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}.")
+

@@ -4,8 +4,7 @@ def crear_tabla_historico_precios(cursor):
         CREATE TABLE IF NOT EXISTS historico_precios (
             id                SERIAL PRIMARY KEY,
             contenido_id      INTEGER NOT NULL,
-            cat_modelo_id         INTEGER,
-            descripcion_id    INTEGER NOT NULL,
+            cat_modelo_id     INTEGER NOT NULL,
             precio_actual     NUMERIC(10, 2) NOT NULL,
             precio_anterior   NUMERIC(10, 2),
             fecha             DATE NOT NULL DEFAULT CURRENT_DATE,  

@@ -36,12 +36,15 @@ def insertar_productos(listado_id: int, contenido: str, pagina: int):
         conn.close()
 
 
-def obtener_contenidos():
+def obtener_contenidos(fecha: str):
     conn = get_connection()
     cursor = None
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM contenidos WHERE fecha = CURRENT_DATE and procesado = FALSE;")
+        if fecha:
+            cursor.execute("SELECT * FROM contenidos WHERE fecha = %s and procesado = FALSE;", (fecha,))
+        else:
+            cursor.execute("SELECT * FROM contenidos WHERE fecha = CURRENT_DATE and procesado = FALSE;")
         contenidos = cursor.fetchall()
         return contenidos
     except Exception as e:
@@ -101,8 +104,56 @@ def insertar_producto_catalogo(conn,
         if cursor:
             cursor.close()
 
+def buscar_modelo_id(conn, descripcion: str, url_producto: str) -> int:
+    """Ejemplo de función para buscar el modelo_id en la base de datos utilizando la descripción del producto."""
+    cursor = None
+    try:
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT id FROM cat_modelos
+            WHERE descripcion ILIKE %s
+            LIMIT 1
+        """, (f"%{descripcion}%",))
+        result = cursor.fetchone()
+        return result[0] if result else None
+    except Exception as e:
+        print(f"Error al buscar modelo_id: {e}")
+        return None
+    finally:
+        if cursor:
+            cursor.close()
 
-def actualizar_flag_contenido_procesado(contenido_id: int):
+
+def insertar_producto_precio(conn, contenido_id: int, modelo_id: int, precio_actual: str, precio_anterior: str):
+    """Ejemplo de función para insertar el precio de un producto en la base de datos."""
+    cursor = None
+    try:
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO historico_precios (
+                contenido_id,
+                cat_modelo_id,
+                precio_actual,
+                precio_anterior,
+                fecha
+            )
+            VALUES (%s, %s, %s, %s, CURRENT_DATE)
+        """, (
+            contenido_id,
+            modelo_id,
+            precio_actual,
+            precio_anterior
+        ))
+        conn.commit()
+    except Exception as e:
+        print(f"Error al insertar precio: {e}")
+        if conn:
+            conn.rollback()
+    finally:
+        if cursor:
+            cursor.close()
+
+def marcar_contenido_procesado(contenido_id: int):
     """Marca un contenido como procesado en la base de datos."""
     conn = get_connection()
     cursor = None
@@ -115,7 +166,7 @@ def actualizar_flag_contenido_procesado(contenido_id: int):
         """, (contenido_id,))
         conn.commit()
     except Exception as e:
-        print(f"Error al actualizar flag de contenido procesado: {e}")
+        print(f"Error al marcar contenido como procesado: {e}")
         if conn:
             conn.rollback()
     finally:

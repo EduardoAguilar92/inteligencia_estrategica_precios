@@ -1,5 +1,5 @@
 import argparse
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -57,8 +57,21 @@ def ejecutar_scraper(listado_item: tuple) -> str:
     return f"ℹ️ Competencia no soportada: {competencia} ({listado_id})"
 
 
+def esperar_hasta_hora_objetivo() -> None:
+    ahora = datetime.now()
+    objetivo = ahora.replace(hour=0, minute=0, second=1, microsecond=0)
+
+    if ahora >= objetivo:
+        objetivo = objetivo + timedelta(days=1)
+
+    segundos_espera = (objetivo - ahora).total_seconds()
+    print(f"⏳ Esperando hasta {objetivo.strftime('%Y-%m-%d %H:%M:%S')} para ejecutar scraping...")
+    time.sleep(segundos_espera)
+
+
 if __name__ == "__main__":
     args = parsear_argumentos()
+    esperar_hasta_hora_objetivo()
     print("Ejecutando el script principal")
     if args.reset:
         print("Se ha solicitado resetear la base de datos")
@@ -66,7 +79,6 @@ if __name__ == "__main__":
         inicializar_base_de_datos()
 
     listados = obtener_listados()
-
     if args.nlistados:
         listados = listados[:args.nlistados]
         print(f"Procesando solo los listados especificados: {args.nlistados}")
@@ -80,9 +92,9 @@ if __name__ == "__main__":
                 print(f"❌ Error en tarea de scraping: {e}")
 
     print("Procesamiento de listados completado")
-    procesar_catalogo()
     print(f"El scraping ha finalizado {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}.")
 
+    procesar_catalogo()
     print("Procesamiento de contenidos completado")
     print(f"El procesamiento de contenido ha finalizado {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}.")
 

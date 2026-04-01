@@ -45,8 +45,6 @@ class ContentProcessor:
                         enlace = tarjeta.select_one("a[target='_self']")
                         articulo = tarjeta.select_one("article.ipod-d-block")
                         imagen = tarjeta.select_one("img")
-                        # precio_actual = tarjeta.select_one("p.a-card-discount")
-                        # precio_anterior = tarjeta.select_one("p.a-card-price")
                         marca = ''
                         modelo = ''
                         patrocinado = False
@@ -60,8 +58,6 @@ class ContentProcessor:
                         # Extraer valores escalares de los Tags
                         url_producto = 'https://www.liverpool.com.mx'+enlace.get("href") if enlace else None
                         url_imagen = imagen.get("src") if imagen else None
-                        # precio_actual_text = precio_actual.get_text(strip=True) if precio_actual else None
-                        # precio_anterior_text = precio_anterior.get_text(strip=True) if precio_anterior else None
                         
                         insertar_producto_catalogo(self.conn,
                                                     self.contenido_id,
@@ -93,18 +89,6 @@ class ContentProcessor:
 
                         imagen = tarjeta.select_one("img")
                         url_imagen = imagen.get("src") or imagen.get("data-src") if imagen else None
-
-                        # precio_regular_elemento = tarjeta.select_one("span.chakra-text.css-uwrhh6")
-                        # try:
-                        #     precio_regular_float = float(precio_regular_elemento.get_text(strip=True).replace("$", "").replace(",", "")) if precio_regular_elemento else None
-                        # except (ValueError, AttributeError):
-                        #     precio_regular_float = None
-
-                        # precio_descuento_elemento = tarjeta.select_one("span.chakra-text.css-44wgta")
-                        # try:
-                        #     precio_descuento_float = float(precio_descuento_elemento.get_text(strip=True).replace("$", "").replace(",", "")) if precio_descuento_elemento else None
-                        # except (ValueError, AttributeError):
-                        #     precio_descuento_float = None
 
                         marca = ''
                         modelo = ''
@@ -140,20 +124,6 @@ class ContentProcessor:
 
                         titulo = tarjeta.select_one("h3[class*='CardProduct_h4']")
                         descripcion = titulo.get_text(" ", strip=True).replace("\n", " ").strip() if titulo else ""
-
-                        # precio_regular_elemento = tarjeta.select_one("span[class*='textUnderline']")
-                        # try:
-                        #     precio_texto = precio_regular_elemento.get_text(strip=True).replace("$", "").replace(",", "").replace("MXN", "").strip() if precio_regular_elemento else ""
-                        #     precio_regular_float = float(precio_texto) if precio_texto else None
-                        # except (ValueError, AttributeError):
-                        #     precio_regular_float = None
-
-                        # precio_descuento_elemento = tarjeta.select_one("p[class*='precio1']")
-                        # try:
-                        #     precio_texto = precio_descuento_elemento.get_text(strip=True).replace("$", "").replace(",", "").replace("MXN", "").strip() if precio_descuento_elemento else ""
-                        #     precio_descuento_float = float(precio_texto) if precio_texto else None
-                        # except (ValueError, AttributeError):
-                        #     precio_descuento_float = None
 
                         imagen = tarjeta.select_one("picture img")
                         url_imagen = (imagen.get("src") if imagen else None) or (imagen.get("data-src") if imagen else None)

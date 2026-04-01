@@ -113,11 +113,11 @@ class ProductProcessor:
                         precio_actual_float = self._extraer_precio_liverpool(precio_actual)
                         precio_anterior_float = self._extraer_precio_liverpool(precio_anterior)
 
-                        print(
-                            f"Descripción del producto: {descripcion} | "
-                            f"Precio actual: {precio_actual_float} | "
-                            f"Precio anterior: {precio_anterior_float}"
-                        )
+                        # print(
+                        #     f"Descripción del producto: {descripcion} | "
+                        #     f"Precio actual: {precio_actual_float} | "
+                        #     f"Precio anterior: {precio_anterior_float}"
+                        # )
 
                         modelo_id = buscar_modelo_id(self.conn, descripcion, url_producto)
                         if modelo_id and precio_actual_float is not None:
@@ -154,11 +154,11 @@ class ProductProcessor:
                         precio_actual_float = self._extraer_precio_coppel(precio_actual)
                         precio_anterior_float = self._extraer_precio_coppel(precio_anterior)
 
-                        print(
-                            f"Descripción del producto: {descripcion} | "
-                            f"Precio actual: {precio_actual_float} | "
-                            f"Precio anterior: {precio_anterior_float}"
-                        )
+                        # print(
+                        #     f"Descripción del producto: {descripcion} | "
+                        #     f"Precio actual: {precio_actual_float} | "
+                        #     f"Precio anterior: {precio_anterior_float}"
+                        # )
 
                         modelo_id = buscar_modelo_id(self.conn, descripcion, url_producto)
                         if modelo_id and precio_actual_float is not None:
@@ -195,11 +195,11 @@ class ProductProcessor:
                         precio_actual_float = self._extraer_precio_sears(precio_actual)
                         precio_anterior_float = self._extraer_precio_sears(precio_anterior)
 
-                        print(
-                            f"Descripción del producto: {descripcion} | "
-                            f"Precio actual: {precio_actual_float} | "
-                            f"Precio anterior: {precio_anterior_float}"
-                        )
+                        # print(
+                        #     f"Descripción del producto: {descripcion} | "
+                        #     f"Precio actual: {precio_actual_float} | "
+                        #     f"Precio anterior: {precio_anterior_float}"
+                        # )
 
                         modelo_id = buscar_modelo_id(self.conn, descripcion, url_producto)
                         if modelo_id and precio_actual_float is not None:

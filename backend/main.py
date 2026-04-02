@@ -71,34 +71,37 @@ def esperar_hasta_hora_objetivo() -> None:
 
 if __name__ == "__main__":
     args = parsear_argumentos()
-    esperar_hasta_hora_objetivo()
-    print("Ejecutando el script principal")
-    if args.reset:
-        print("Se ha solicitado resetear la base de datos")
-        resetear_base_de_datos()
-        inicializar_base_de_datos()
+    while True:
+        # esperar_hasta_hora_objetivo()
+        print("Ejecutando el script principal")
+        if args.reset:
+            print("Se ha solicitado resetear la base de datos")
+            resetear_base_de_datos()
+            inicializar_base_de_datos()
 
-    listados = obtener_listados()
-    if args.nlistados:
-        listados = listados[:args.nlistados]
-        print(f"Procesando solo los listados especificados: {args.nlistados}")
+        listados = obtener_listados()
+        if args.nlistados:
+            listados = listados[:args.nlistados]
+            print(f"Procesando solo los listados especificados: {args.nlistados}")
 
-    with ThreadPoolExecutor(max_workers=max(1, args.workers)) as executor:
-        futures = [executor.submit(ejecutar_scraper, listado) for listado in listados]
-        for future in as_completed(futures):
-            try:
-                print(future.result())
-            except Exception as e:
-                print(f"❌ Error en tarea de scraping: {e}")
+        with ThreadPoolExecutor(max_workers=max(1, args.workers)) as executor:
+            futures = [executor.submit(ejecutar_scraper, listado) for listado in listados]
+            for future in as_completed(futures):
+                try:
+                    print(future.result())
+                except Exception as e:
+                    print(f"❌ Error en tarea de scraping: {e}")
 
-    print("Procesamiento de listados completado")
-    print(f"El scraping ha finalizado {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}.")
+        print("Procesamiento de listados completado")
+        print(f"El scraping ha finalizado {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}.")
 
-    procesar_catalogo()
-    print("Procesamiento de contenidos completado")
-    print(f"El procesamiento de contenido ha finalizado {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}.")
+        procesar_catalogo()
+        print("Procesamiento de contenidos completado")
+        print(f"El procesamiento de contenido ha finalizado {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}.")
 
-    procesar_productos()
-    print("Procesamiento de productos completado")
-    print(f"El procesamiento de productos ha finalizado {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}.")
+        procesar_productos()
+        print("Procesamiento de productos completado")
+        print(f"El procesamiento de productos ha finalizado {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}.")
+        esperar_hasta_hora_objetivo()
+
 

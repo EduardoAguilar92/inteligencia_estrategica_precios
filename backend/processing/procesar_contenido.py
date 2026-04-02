@@ -54,6 +54,7 @@ class ContentProcessor:
                         descripcion = ""
                         if articulo:
                             descripcion = articulo.get_text(" ", strip=True).replace("\n", " ").strip()
+                            descripcion = " ".join(descripcion.split())
 
                         # Extraer valores escalares de los Tags
                         url_producto = 'https://www.liverpool.com.mx'+enlace.get("href") if enlace else None
@@ -85,7 +86,8 @@ class ContentProcessor:
                         url_producto = 'https://www.coppel.com'+enlace.get("href") if enlace else None
 
                         nombre = tarjeta.select_one("h3.chakra-text.css-12u5nxr")
-                        descripcion = nombre.get_text(strip=True) if nombre else ""
+                        descripcion = nombre.get_text(" ", strip=True).replace("\n", " ").strip() if nombre else ""
+                        descripcion = " ".join(descripcion.split())
 
                         imagen = tarjeta.select_one("img")
                         url_imagen = imagen.get("src") or imagen.get("data-src") if imagen else None
@@ -124,6 +126,7 @@ class ContentProcessor:
 
                         titulo = tarjeta.select_one("h3[class*='CardProduct_h4']")
                         descripcion = titulo.get_text(" ", strip=True).replace("\n", " ").strip() if titulo else ""
+                        descripcion = " ".join(descripcion.split())
 
                         imagen = tarjeta.select_one("picture img")
                         url_imagen = (imagen.get("src") if imagen else None) or (imagen.get("data-src") if imagen else None)
